@@ -1,6 +1,12 @@
-import { MiddlewareFunction } from 'middy';
-import { APIGatewayEvent } from 'aws-lambda';
+import middy from '@middy/core';
+import { APIGatewayEvent, Context } from 'aws-lambda';
+import { HttpMiddlewareOptions } from './httpMiddleware';
 
+export interface NormalizeHttpMiddlewareOptions extends HttpMiddlewareOptions {
+    logger?: (message: any) => void;
+    qs?: Record<string, string>;
+    body?: string;
+}
 export interface HttpGatewayEvent extends APIGatewayEvent {
     input?: Record<string, any> | null | string;
     auth?: {
@@ -9,7 +15,14 @@ export interface HttpGatewayEvent extends APIGatewayEvent {
 }
 
 export interface NormalizeHttpMiddleware {
-    before: MiddlewareFunction<HttpGatewayEvent, any>;
+    before: middy.MiddlewareFunction<HttpGatewayEvent, any>;
 }
+
+export function normalizeRequest(opts?: NormalizeHttpMiddlewareOptions): any;
+
+export function normalizeHttpRequestBeforeHandler(
+    handler: middy.HandlerLambda<HttpGatewayEvent>,
+    next: middy.NextFunction,
+): void;
 
 export default function normalizeHttpRequestMiddleware(): NormalizeHttpMiddleware;

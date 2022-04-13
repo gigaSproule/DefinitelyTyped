@@ -194,4 +194,10 @@ const dataSubjectType: MicrosoftGraph.DataSubjectType = "teacher";
 
 const advancedConfigState: MicrosoftGraph.AdvancedConfigState = "disabled";
 
-const contactRelationship: MicrosoftGraph.ContactRelationship = "unknownFutureValue";
+const messageActionFlag: MicrosoftGraph.MessageActionFlag = "read";
+
+const stagedFeatureName: MicrosoftGraph.StagedFeatureName = "seamlessSso";
+
+const accessReviewExpirationBehavior: MicrosoftGraph.AccessReviewExpirationBehavior = "acceptAccessRecommendation";
+
+const roleEligibilityScheduleFilterByCurrentUserOptions: MicrosoftGraph.RoleEligibilityScheduleFilterByCurrentUserOptions = "principal";

@@ -8,6 +8,9 @@ import normalizeSQSMessageMiddleware from 'lesgo/middlewares/normalizeSQSMessage
 import LesgoException from 'lesgo/exceptions/LesgoException';
 
 import ElasticCacheService from 'lesgo/services/ElasticCacheService';
+import AuroraDbRDSProxyService from 'lesgo/services/AuroraDbRDSProxyService';
+import AuroraDbService from 'lesgo/services/AuroraDbService';
+
 import './tests/services/ElasticsearchService';
 import './tests/services/AuroraDbService';
 import './tests/services/DynamoDbService';
@@ -79,12 +82,13 @@ ec('conname'); // $ExpectType Memcached
 
 encrypt('this is a test'); // $ExpectType string
 decrypt('TMxLqkHSs8D7tD02ptbtWQxocJO93ZPvqS4IruHEpj8='); // $ExpectType string
-hash('this is a test'); // $ExpectType Buffer
-hashMD5(new Uint8Array([21, 31])); // $ExpectType Buffer
+hash('this is a test'); // $ExpectType string
+hashMD5(new Uint8Array([21, 31])); // $ExpectType string
 
-db; // $ExpectType AuroraDbService
+db; // $ExpectType AuroraDbService | AuroraDbRDSProxyService || AuroraDbRDSProxyService | AuroraDbService
 (async () => {
-    await db.select('SELECT * FROM users;', []); // $ExpectType any[]
+    await (db as AuroraDbService).select('SELECT * FROM users;', []); // $ExpectType any[]
+    await (db as AuroraDbRDSProxyService).select('SELECT * FROM users;', []); // $ExpectType AuroraDbRDSProxyServiceResult
 })();
 dynamodb; // $ExpectType DynamoDb
 (async () => {
@@ -140,7 +144,7 @@ queue; // $ExpectType SQSService<Record<string, QueueConfig>>
 (async () => {
     await dispatch('ping', 'myqueue'); // $ExpectType SendMessageResult
 })();
-// $ExpectType Partial<Record<"id" | "name", any>>
+// $ExpectType Partial<Record<"id" | "name", any>> || Partial<Record<"name" | "id", any>>
 validateFields(
     {
         id: 1,
